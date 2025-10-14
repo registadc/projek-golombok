@@ -230,18 +230,6 @@ $result = $koneksi->query("SELECT * FROM kategori");
           <label>Foto Utama</label>
           <input type="file" name="foto1" accept="image/*" required>
         </div>
-        <div class="form-group">
-          <label>Foto 2</label>
-          <input type="file" name="foto2" accept="image/*" required>
-        </div>
-        <div class="form-group">
-          <label>Foto 3</label>
-          <input type="file" name="foto3" accept="image/*" required>
-        </div>
-        <div class="form-group">
-          <label>Foto 4</label>
-          <input type="file" name="foto4" accept="image/*" required>
-        </div>
         <button type="submit">Simpan</button>
       </form>
     </div>
