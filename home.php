@@ -15,54 +15,73 @@
     }
 
     header {
-  width: 100%;
-  padding: 15px 40px;
-  position: fixed;          /* supaya ikut saat di-scroll */
-  top: 0; left: 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  z-index: 9999;
-  transition: all 0.3s ease;  /* animasi halus */
-  background: transparent;     /* default transparan */
-}
+      width: 100%;
+      padding: 15px 40px;
+      position: fixed;
+      top: 0; left: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 9999;
+      transition: all 0.3s ease;
+      background: transparent;
+    }
+    header a {
+      text-decoration: none;
+      color: #fff; 
+      transition: color 0.3s ease;
+    }
+    header.scrolled {
+      background: #fff;  
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+    header.scrolled a { color: #333; }
+    header.scrolled .judul { color: #2EC4B6; }
 
-header a {
-  text-decoration: none;
-  color: #fff; 
-  transition: color 0.3s ease;
-}
-
-header.scrolled {
-  background: #fff;  
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-}
-
-header.scrolled a {
-  color: #333; 
-}
-
-header.scrolled .judul {
-  color: #2EC4B6; 
-}
-
-header .judul {
-  font-family: 'Pacifico', cursive;
-  font-size: 24px;
-  color: #2EC4B6; 
-}
+    header .judul {
+      font-family: 'Pacifico', cursive;
+      font-size: 24px;
+      color: #2EC4B6; 
+    }
 
     nav {
       display:flex;
       gap:24px;
+      align-items:center;
     }
     nav a {
       text-decoration:none;
-      color:#fff;
       font-weight:500;
       transition:.3s;
     }
     nav a:hover { color:#00C9A7; }
+
+    /* Login button */
+    .login-btn {
+      background: #00C9A7;
+      color: #fff;
+      padding: 6px 16px;
+      border-radius: 6px;
+      font-weight: 500;
+      transition: 0.3s;
+    }
+    .login-btn:hover { background: #009E85; }
+
+    /* User icon */
+    .user-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background-color: rgba(255,255,255,0.15);
+      transition: background-color 0.3s;
+    }
+    .user-icon:hover {
+      background-color: #00C9A7;
+      color: white;
+    }
 
     /* Hero Section */
     .home {
@@ -579,14 +598,21 @@ header .judul {
 
 <!------------------NAVBAR------------->
   <header>
-    <a href="home.php" class="judul">GoLombok</a>
-    <nav>
-      <a href="home.php">Home</a>
-      <a href="destinasi.php">Destination</a>
-      <a href="favorit.php">Favorites</a>
-      <a href="user_profile.php"><i class="fas fa-user"></i></a>
-    </nav>
-  </header>
+  <a href="home.php" class="judul">GoLombok</a>
+  <nav>
+    <a href="home.php">Home</a>
+    <a href="destinasi.php">Destination</a>
+    <a href="favorit.php">Favorites</a>
+
+    <?php if(isset($_SESSION['user_id'])): ?>
+      <!-- Sudah login -->
+      <a href="user_profile.php" class="user-icon"><i class="fas fa-user"></i></a>
+    <?php else: ?>
+      <!-- Belum login -->
+      <a href="login.php" class="login-btn">Login</a>
+    <?php endif; ?>
+  </nav>
+</header>
 
 <!------------------COVER------------->
   <section class="home">
