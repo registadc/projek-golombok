@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Register</title>
     <style>
         * {
             box-sizing: border-box;
@@ -129,19 +129,25 @@
     <div class="register">
         <div class="form-container">
             <form action="proses_register.php" method="POST" enctype="multipart/form-data">
-                <h2>Login</h2>
-                <p>Don't have an account?<a href="register.php">Register</a></p>
+                <h2>Register</h2>
+                <p>Already a member? <a href="login.php">Log in</a></p>
 
                 <div class="form-group">
                     <input type="text" id="username" name="username" required placeholder="Username">
+                    <input type="email" id="email" name="email" required placeholder="Email">
                     <input type="password" id="password" name="password" required placeholder="Password">
+                    <input type="tel" id="no" name="no" required placeholder="Phone Number">
                     
+                    <div class="file-input-container">
+                        <input type="file" id="foto" name="foto" accept="image/*" required>
+                    </div>
+
                     <input type="submit" value="Create Account">
                 </div>
             </form>
         </div>
         
-        <img src="img/login2.jpeg" alt="air laut">
+        <img src="img/register2.jpeg" alt="air laut">
     </div>
 </body>
 </html>
