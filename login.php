@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Register</title>
     <style>
         * {
             box-sizing: border-box;
@@ -32,11 +32,12 @@
         .register img {
             width: 50%;
             object-fit: cover;
-            border-top-right-radius: 12px;
-            border-bottom-right-radius: 12px;
+            border-top-left-radius: 12px;
+            border-bottom-left-radius: 12px;
         }
 
         .form-container {
+            margin-top: 80px;
             padding: 40px;
             width: 50%;
         }
@@ -97,6 +98,7 @@
         }
 
         .file-input-container::before {
+            content: "Choose File Profile Picture";
             position: absolute;
             top: 50%;
             left: 14px;
@@ -127,21 +129,21 @@
 </head>
 <body>
     <div class="register">
+        <img src="img/login2.jpeg" alt="air laut">
+        
         <div class="form-container">
             <form action="proses_register.php" method="POST" enctype="multipart/form-data">
-                <h2>Login</h2>
-                <p>Don't have an account?<a href="register.php">Register</a></p>
+                <h2>Log in</h2>
+                <p>Don't have an account? <a href="register.php">Register</a></p>
 
                 <div class="form-group">
-                    <input type="text" id="username" name="username" required placeholder="Username">
+                    <input type="email" id="email" name="email" required placeholder="Email">
                     <input type="password" id="password" name="password" required placeholder="Password">
-                    
-                    <input type="submit" value="Create Account">
+
+                    <input type="submit" value="Sign In">
                 </div>
             </form>
         </div>
-        
-        <img src="img/login2.jpeg" alt="air laut">
     </div>
 </body>
 </html>
