@@ -1,7 +1,7 @@
 <?php
 include 'koneksi.php';
 
-$id_wisata = $_GET['id'];
+$id_wisata = $_GET['id_wisata'];
 
 // Ambil data wisata
 $query = mysqli_query($koneksi, "SELECT * FROM wisata WHERE id_wisata = '$id_wisata'");
