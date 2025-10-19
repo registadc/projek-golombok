@@ -18,7 +18,6 @@ if (isset($_GET['kategori']) && !empty($_GET['kategori'])) {
 
 $destinasi = $koneksi->query($sql);
 
-// Handle add to favorites
 if (isset($_GET['add_favorite']) && isset($_GET['id_wisata'])) {
     session_start();
     if (isset($_SESSION['user_id'])) {
@@ -119,7 +118,7 @@ if (isset($_SESSION['user_id'])) {
         }
 
         .destinasi h2 {
-            font-size: 24px;
+            font-size: 30px;
             font-weight: 700;
             color: #073B4C;
             margin-bottom: 8px;
@@ -130,6 +129,7 @@ if (isset($_SESSION['user_id'])) {
             color: #555;
             margin-bottom: 30px;
             text-align: center;
+            font-size: 20px;
         }
 
         .search-container {
@@ -193,10 +193,11 @@ if (isset($_SESSION['user_id'])) {
             background-color: white;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            padding: 15px;
-            text-align: center;
+            overflow: hidden; /* Penting supaya rounded bawah tombol ikut rapi */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            position: relative;
         }
 
         .destinasi-item:hover {
@@ -217,6 +218,7 @@ if (isset($_SESSION['user_id'])) {
             color: #024950;
             margin-bottom: 8px;
             text-align: left;
+            padding-left: 15px;
         }
 
         .destinasi-item p {
@@ -224,17 +226,24 @@ if (isset($_SESSION['user_id'])) {
             font-size: 14px;
             margin-bottom: 15px;
             text-align: left;
+            padding-left: 15px;
         }
 
         .btn-read {
-            display: inline-block;
-            padding: 8px 16px;
-            background-color: #00bfa6;
-            color: white;
-            border-radius: 5px;
+            display: block;                 
+            width: 100%;
+            background-color: #004d4d;      
+            color: #ffffff;                 
             text-decoration: none;
-            font-size: 14px;
-            transition: background-color 0.3s ease;
+            font-size: 1.1rem;
+            font-weight: 500;
+            padding: 15px 0;
+            border: none;
+            border-radius: 0 0 10px 10px;   
+            transition: all 0.3s ease;
+            text-align: center;
+            cursor: pointer;
+            box-shadow: inset 0 0 0 0 #00796b;
         }
 
         .btn-read:hover {
