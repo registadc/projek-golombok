@@ -1,3 +1,40 @@
+<?php
+include 'koneksi.php'; 
+
+if (isset($_POST['register'])) {
+    $username   = $_POST['username'];
+    $email      = $_POST['email'];
+    $password   = md5($_POST['password']);
+    $no_telp    = $_POST['no_telp'];
+
+    // Upload foto
+    $foto_name = $_FILES['foto_profil']['name'];
+    $foto_tmp  = $_FILES['foto_profil']['tmp_name'];
+    $folder    = "uploads/" . $foto_name;
+
+    // Pastikan folder uploads ada
+    if (!is_dir('uploads')) {
+        mkdir('uploads', 0777, true);
+    }
+
+    if (move_uploaded_file($foto_tmp, $folder)) {
+        $sql = "INSERT INTO user (username, email, password, no_telp, foto_profil, user_type)
+                VALUES ('$username', '$email', '$password', '$no_telp', '$foto_name', 'user')";
+
+        if (mysqli_query($koneksi, $sql)) {
+            echo "<script>alert('Register berhasil! Silakan login.'); window.location='login.php';</script>";
+        } else {
+            echo "Error: " . mysqli_error($koneksi);
+        }
+    } else {
+        echo "Upload foto gagal.";
+    }
+}
+?>
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -128,7 +165,7 @@
 <body>
     <div class="register">
         <div class="form-container">
-            <form action="proses_register.php" method="POST" enctype="multipart/form-data">
+            <form action="" method="POST" enctype="multipart/form-data">
                 <h2>Register</h2>
                 <p>Already a member? <a href="login.php">Log in</a></p>
 
@@ -136,13 +173,13 @@
                     <input type="text" id="username" name="username" required placeholder="Username">
                     <input type="email" id="email" name="email" required placeholder="Email">
                     <input type="password" id="password" name="password" required placeholder="Password">
-                    <input type="tel" id="no" name="no" required placeholder="Phone Number">
+                    <input type="tel" id="no_telp" name="no_telp" required placeholder="Phone Number">
                     
                     <div class="file-input-container">
-                        <input type="file" id="foto" name="foto" accept="image/*" required>
+                        <input type="file" id="foto_profil" name="foto_profil" accept="image/*" required>
                     </div>
 
-                    <input type="submit" value="Create Account">
+                    <input type="submit" name="register" value="Create Account">
                 </div>
             </form>
         </div>

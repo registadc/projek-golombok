@@ -1,3 +1,10 @@
+<?php
+// Hanya start session jika belum ada session yang aktif
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -42,6 +49,7 @@
     nav {
       display:flex;
       gap:24px;
+      align-items: center;
     }
     
     nav a {
@@ -57,27 +65,72 @@
       color: #00C9A7; 
     }
     
-    /* Styling khusus untuk icon user */
+    /* Styling untuk button login */
+    .login-btn {
+      background-color: #00C9A7;
+      color: white;
+      padding: 8px 20px;
+      border-radius: 25px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+    }
+    
+    .login-btn:hover {
+      background-color: #00b894;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 201, 167, 0.3);
+      color: white;
+    }
+    
+    /* PERBAIKAN: Styling untuk icon user (sederhana) */
     .user-icon {
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 36px;
-      height: 36px;
+      width: 40px;
+      height: 40px;
       border-radius: 50%;
       background-color: #f0f0f0;
-      transition: background-color 0.3s;
-      margin-left: 10px;
+      transition: all 0.3s ease;
+      text-decoration: none;
     }
     
     .user-icon:hover {
       background-color: #00C9A7;
-      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
     
     .user-icon i {
       font-size: 18px;
       color: #555;
+      transition: color 0.3s ease;
+    }
+    
+    .user-icon:hover i {
+      color: white;
+    }
+    
+    /* PERBAIKAN: Hapus styling untuk dropdown yang tidak digunakan */
+    .user-menu,
+    .username,
+    .dropdown-content {
+      display: none !important;
+    }
+    
+    /* Responsive design */
+    @media (max-width: 768px) {
+      header {
+        padding: 15px 20px;
+      }
+      
+      nav {
+        gap: 15px;
+      }
     }
   </style>
 </head>
@@ -89,9 +142,24 @@
       <a href="home.php">Home</a>
       <a href="destinasi.php">Destination</a>
       <a href="favorit.php">Favorites</a>
-      <a href="user_profile.php" class="user-icon">
-        <i class="fas fa-user"></i>
-      </a>
+      
+      <?php
+      if (isset($_SESSION['user_id'])) {
+          // User sudah login - tampilkan icon user saja
+          ?>
+          <a href="user_profile.php" class="user-icon" title="Profile">
+            <i class="fas fa-user"></i>
+          </a>
+          <?php
+      } else {
+          // User belum login - tampilkan button login
+          ?>
+          <a href="login.php" class="login-btn">
+            <i class="fas fa-sign-in-alt"></i> Login
+          </a>
+          <?php
+      }
+      ?>
     </nav>
   </header>
 </body>

@@ -1,9 +1,11 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 include 'koneksi.php';
 
 
 $result = $koneksi->query("SELECT * FROM kategori");
-
 
 $kategori_id = "";
 if (isset($_GET['kategori']) && !empty($_GET['kategori'])) {
@@ -18,26 +20,24 @@ if (isset($_GET['kategori']) && !empty($_GET['kategori'])) {
 
 $destinasi = $koneksi->query($sql);
 
+// PERBAIKAN: Gunakan session variable yang konsisten
 if (isset($_GET['add_favorite']) && isset($_GET['id_wisata'])) {
-    session_start();
     if (isset($_SESSION['user_id'])) {
-        $user_id = $_SESSION['id_user'];
+        $user_id = $_SESSION['user_id'];
         $wisata_id = $_GET['id_wisata'];
         
-        // Cek apakah sudah ada di favorit
-        $check = $koneksi->query("SELECT * FROM favorit WHERE id_user = '$id_user' AND id_wisata = '$id_wisata'");
+        // PERBAIKAN: Perbaiki variabel $id_user menjadi $user_id
+        $check = $koneksi->query("SELECT * FROM favorit WHERE id_user = '$user_id' AND id_wisata = '$wisata_id'");
         
         if ($check->num_rows > 0) {
-            // Jika sudah ada, hapus dari favorit
-            $koneksi->query("DELETE FROM favorit WHERE id_user = '$id_user' AND id_wisata = '$id_wisata'");
+            $koneksi->query("DELETE FROM favorit WHERE id_user = '$user_id' AND id_wisata = '$wisata_id'");
             $favorite_message = "Destinasi dihapus dari favorit";
         } else {
-            // Jika belum ada, tambahkan ke favorit
-            $koneksi->query("INSERT INTO favorit (id_user, id_wisata) VALUES ('$id_user', '$id_wisata')");
+            // PERBAIKAN: Perbaiki variabel $id_user menjadi $user_id
+            $koneksi->query("INSERT INTO favorit (id_user, id_wisata) VALUES ('$user_id', '$wisata_id')");
             $favorite_message = "Destinasi ditambahkan ke favorit";
         }
         
-        // Redirect kembali ke halaman destinasi dengan pesan
         header("Location: destinasi.php?kategori=" . (isset($_GET['kategori']) ? $_GET['kategori'] : '') . "&keyword=" . (isset($_GET['keyword']) ? $_GET['keyword'] : '') . "&message=" . urlencode($favorite_message));
         exit();
     } else {
@@ -47,18 +47,17 @@ if (isset($_GET['add_favorite']) && isset($_GET['id_wisata'])) {
     }
 }
 
-// Cek status favorit untuk setiap destinasi
-session_start();
+// PERBAIKAN: Query untuk mendapatkan status favorit - HAPUS DUPLIKAT
 $favorites = [];
 if (isset($_SESSION['user_id'])) {
     $user_id = $_SESSION['user_id'];
-    $favorite_result = $koneksi->query("SELECT wisata_id FROM favorites WHERE user_id = '$user_id'");
+    // PERBAIKAN: Perbaiki nama tabel dan kolom
+    $favorite_result = $koneksi->query("SELECT id_wisata FROM favorit WHERE id_user = '$user_id'");
     while ($row = $favorite_result->fetch_assoc()) {
-        $favorites[] = $row['wisata_id'];
+        $favorites[] = $row['id_wisata'];
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -402,30 +401,30 @@ if (isset($_SESSION['user_id'])) {
                 
             </div>  
 
-            <div class="daftar-destinasi">
-                <?php
-                if ($destinasi->num_rows > 0) {
-                    while ($row = $destinasi->fetch_assoc()) {
-                        $is_favorite = in_array($row['id_wisata'], $favorites);
-                        $heart_icon = $is_favorite ? 'fas' : 'far';
-                        
-                        echo "
-                        <div class='destinasi-item'>
-                            <a href='destinasi.php?add_favorite=1&wisata_id={$row['id_wisata']}&kategori=" . (isset($_GET['kategori']) ? $_GET['kategori'] : '') . "&keyword=" . (isset($_GET['keyword']) ? $_GET['keyword'] : '') . "' class='love-icon " . ($is_favorite ? 'active' : '') . "'>
-                                <i class='{$heart_icon} fa-heart'></i>
-                            </a>
-                            <img src='admin_dashboard/uploads/{$row['gambar_utama']}' alt='{$row['nama_wisata']}'>
-                            <h3>{$row['nama_wisata']}</h3>
-                            <p>{$row['lokasi']}</p>
-                            <a href='detail_wisata.php?id_wisata={$row['id_wisata']}' class='btn-read'>Read More</a>
-                        </div>";
-                    }
-                } else {
-                    echo "<div class='no-results'>Tidak ada destinasi yang ditemukan.</div>";
-                }
-                ?>
-            </div>
-
+           <div class="daftar-destinasi">
+    <?php
+    if ($destinasi->num_rows > 0) {
+        while ($row = $destinasi->fetch_assoc()) {
+            $is_favorite = in_array($row['id_wisata'], $favorites);
+            $heart_icon = $is_favorite ? 'fas' : 'far';
+            
+            // PERBAIKAN: Gunkan id_wisata yang benar
+            echo "
+            <div class='destinasi-item'>
+                <a href='destinasi.php?add_favorite=1&id_wisata={$row['id_wisata']}&kategori=" . (isset($_GET['kategori']) ? $_GET['kategori'] : '') . "&keyword=" . (isset($_GET['keyword']) ? $_GET['keyword'] : '') . "' class='love-icon " . ($is_favorite ? 'active' : '') . "'>
+                    <i class='{$heart_icon} fa-heart'></i>
+                </a>
+                <img src='admin_dashboard/uploads/{$row['gambar_utama']}' alt='{$row['nama_wisata']}'>
+                <h3>{$row['nama_wisata']}</h3>
+                <p>{$row['lokasi']}</p>
+                <a href='detail_wisata.php?id_wisata={$row['id_wisata']}' class='btn-read'>Read More</a>
+            </div>";
+        }
+    } else {
+        echo "<div class='no-results'>Tidak ada destinasi yang ditemukan.</div>";
+    }
+    ?>
+</div>
         </div>
     </div>
 

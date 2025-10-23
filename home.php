@@ -1,3 +1,13 @@
+<?php
+
+// Hanya start session jika belum ada session yang aktif
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+?>
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -597,18 +607,21 @@
 <body>
 
 <!------------------NAVBAR------------->
-  <header>
+<header>
   <a href="home.php" class="judul">GoLombok</a>
   <nav>
     <a href="home.php">Home</a>
     <a href="destinasi.php">Destination</a>
     <a href="favorit.php">Favorites</a>
 
-    <?php if(isset($_SESSION['user_id'])): ?>
-      <!-- Sudah login -->
-      <a href="user_profile.php" class="user-icon"><i class="fas fa-user"></i></a>
+    <?php 
+    if(isset($_SESSION['user_id'])): ?>
+      <!-- PERBAIKAN: Hanya tampilkan icon user saja -->
+      <a href="user_profile.php" class="user-icon" title="Profile">
+        <i class="fas fa-user"></i>
+      </a>
     <?php else: ?>
-      <!-- Belum login -->
+      <!-- Tampilkan tombol login jika belum login -->
       <a href="login.php" class="login-btn">Login</a>
     <?php endif; ?>
   </nav>
@@ -646,59 +659,60 @@
   </form>
 
 <!----------------TOP DESTINASI------------->
-  <section class="destinations">
+<section class="destinations">
     <h2>Top Destinations</h2>
     <p>Destinasi terbaik Lombok untuk liburan tak terlupakan.</p>
 
     <div class="dest-grid">
-      <?php
-      include "koneksi.php";
-      
-      $query = mysqli_query($koneksi, "SELECT * FROM wisata LIMIT 4");
-      $destinasi = [];
-      while ($row = mysqli_fetch_assoc($query)) {
-          $destinasi[] = $row;
-      }
-      
-      // Jika data dari database tersedia
-      if(count($destinasi) >= 4): 
-        for($i = 0; $i < 4; $i++):
-          $d = $destinasi[$i];
-      ?>
-        <a href="detail_wisata.php?id=<?= $d['id_wisata']; ?>" class="dest-card reveal">
-          <img src="<?= !empty($d['gambar_utama']) ? 'admin_dashboard/uploads/'.$d['gambar_utama'] : 'images/default.jpg'; ?>" 
-               alt="<?= $d['nama_wisata']; ?>"
-               onerror="this.src='images/default.jpg'">
-          <div class="title"><?= $d['nama_wisata']; ?></div>
-        </a>
-      <?php 
-        endfor; 
-      else: 
-        // Fallback jika data tidak tersedia
-      ?>
-        <a href="#" class="dest-card reveal">
-          <img src="img/rinjani.jpeg" alt="Gunung Rinjani">
-          <div class="title">Gunung Rinjani</div>
-        </a>
-        <a href="#" class="dest-card reveal">
-          <img src="img/pink-beach.jpeg" alt="Pink Beach">
-          <div class="title">Pink Beach</div>
-        </a>
-        <a href="#" class="dest-card reveal">
-          <img src="img/gili-trawangan.jpeg" alt="Gili Trawangan">
-          <div class="title">Gili Trawangan</div>
-        </a>
-        <a href="#" class="dest-card reveal">
-          <img src="img/sendang-gile.jpeg" alt="Air Terjun Sendang Gile">
-          <div class="title">Air Terjun Sendang Gile</div>
-        </a>
-      <?php endif; ?>
+        <?php
+        include "koneksi.php";
+        
+        $query = mysqli_query($koneksi, "SELECT * FROM wisata LIMIT 4");
+        $destinasi = [];
+        while ($row = mysqli_fetch_assoc($query)) {
+            $destinasi[] = $row;
+        }
+        
+        // Jika data dari database tersedia
+        if(count($destinasi) >= 4): 
+            for($i = 0; $i < 4; $i++):
+            $d = $destinasi[$i];
+        ?>
+            <!-- PERBAIKAN: ganti id menjadi id_wisata -->
+            <a href="detail_wisata.php?id_wisata=<?= $d['id_wisata']; ?>" class="dest-card reveal">
+                <img src="<?= !empty($d['gambar_utama']) ? 'admin_dashboard/uploads/'.$d['gambar_utama'] : 'images/default.jpg'; ?>" 
+                    alt="<?= $d['nama_wisata']; ?>"
+                    onerror="this.src='images/default.jpg'">
+                <div class="title"><?= $d['nama_wisata']; ?></div>
+            </a>
+        <?php 
+            endfor; 
+        else: 
+            // Fallback jika data tidak tersedia
+        ?>
+            <a href="#" class="dest-card reveal">
+                <img src="img/rinjani.jpeg" alt="Gunung Rinjani">
+                <div class="title">Gunung Rinjani</div>
+            </a>
+            <a href="#" class="dest-card reveal">
+                <img src="img/pink-beach.jpeg" alt="Pink Beach">
+                <div class="title">Pink Beach</div>
+            </a>
+            <a href="#" class="dest-card reveal">
+                <img src="img/gili-trawangan.jpeg" alt="Gili Trawangan">
+                <div class="title">Gili Trawangan</div>
+            </a>
+            <a href="#" class="dest-card reveal">
+                <img src="img/sendang-gile.jpeg" alt="Air Terjun Sendang Gile">
+                <div class="title">Air Terjun Sendang Gile</div>
+            </a>
+        <?php endif; ?>
     </div>
 
     <div class="explore-btn reveal">
-      <a href="destinasi.php">explore more destinations</a>
+        <a href="destinasi.php">explore more destinations</a>
     </div>
-  </section>
+</section>
 
   <!----------------TRAVEL SMART------------->
   <div class="travel reveal">
