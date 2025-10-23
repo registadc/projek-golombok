@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (empty($email) || empty($password)) {
         $error = "Email dan password harus diisi";
     } else {
-        // PERBAIKAN: Sesuaikan dengan struktur tabel register
+        // Query untuk login
         $query = "SELECT * FROM user WHERE email = ? AND password = ?";
         $stmt = $koneksi->prepare($query);
         
@@ -26,8 +26,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if ($result->num_rows > 0) {
                 $user = $result->fetch_assoc();
                 
-                // Set session - sesuaikan dengan kolom yang ada di tabel user
-                $_SESSION['user_id'] = $user['id_user']; // atau 'id' tergantung struktur
+                // Set session
+                $_SESSION['user_id'] = $user['id_user'];
                 $_SESSION['username'] = $user['username'];
                 $_SESSION['email'] = $user['email'];
                 $_SESSION['user_type'] = $user['user_type'];
@@ -52,118 +52,107 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - GoLombok</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
         }
 
         body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #00C9A7, #2EC4B6);
-            min-height: 100vh;
+            background: #f5f5f5;
             display: flex;
-            align-items: center;
             justify-content: center;
+            align-items: center;
+            min-height: 100vh;
             padding: 20px;
         }
 
-        .login-container {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        .login {
+            display: flex;
+            background-color: #fff;
+            width: 800px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .login img {
+            width: 50%;
+            object-fit: cover;
+            border-top-left-radius: 12px;
+            border-bottom-left-radius: 12px;
+        }
+
+        .form-container {
             padding: 40px;
-            width: 100%;
-            max-width: 400px;
+            width: 50%;
+            margin-top: 80px;
         }
 
-        .login-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .login-header h1 {
-            color: #2EC4B6;
-            font-size: 2rem;
-            margin-bottom: 10px;
+        .form-container h2 {
+            margin-bottom: 5px;
+            color: #084c61;
+            font-size: 22px;
             font-weight: 700;
         }
 
-        .login-header p {
-            color: #666;
-            font-size: 0.9rem;
+        .form-container p {
+            margin-bottom: 25px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .form-container p a {
+            color: #00bfa6;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .form-container p a:hover {
+            text-decoration: underline;
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: #333;
-            font-weight: 500;
-        }
-
-        .form-group input {
+        .form-group input[type="email"],
+        .form-group input[type="password"] {
             width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: 1rem;
-            transition: border-color 0.3s ease;
-        }
-
-        .form-group input:focus {
-            outline: none;
-            border-color: #00C9A7;
-        }
-
-        .login-btn {
-            width: 100%;
-            background: #00C9A7;
-            color: white;
+            padding: 12px 14px;
+            margin-bottom: 15px;
             border: none;
+            background-color: #e0f7fa;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            color: #084c61;
+            transition: background-color 0.3s ease;
+        }
+
+        .form-group input[type="email"]:focus,
+        .form-group input[type="password"]:focus {
+            background-color: #b2ebf2;
+        }
+
+        .form-group input[type="submit"] {
+            width: 100%;
             padding: 12px;
-            border-radius: 10px;
-            font-size: 1rem;
+            border: none;
+            background-color: #00bfa6;
+            color: #fff;
+            font-size: 16px;
             font-weight: 600;
+            border-radius: 25px;
             cursor: pointer;
-            transition: background 0.3s ease;
+            transition: background-color 0.3s ease;
             margin-top: 10px;
         }
 
-        .login-btn:hover {
-            background: #00b894;
-        }
-
-        .error-message {
-            background: #ffebee;
-            color: #c62828;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            text-align: center;
-            border: 1px solid #ffcdd2;
-        }
-
-        .register-link {
-            text-align: center;
-            margin-top: 20px;
-            color: #666;
-        }
-
-        .register-link a {
-            color: #00C9A7;
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        .register-link a:hover {
-            text-decoration: underline;
+        .form-group input[type="submit"]:hover {
+            background-color: #009f8a;
         }
 
         .back-home {
@@ -175,77 +164,54 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             color: #666;
             text-decoration: none;
             font-size: 0.9rem;
+            transition: color 0.3s ease;
         }
 
         .back-home a:hover {
-            color: #00C9A7;
+            color: #00bfa6;
         }
 
-        .password-toggle {
-            position: relative;
-        }
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .login {
+                flex-direction: column;
+                width: 90%;
+                max-width: 400px;
+            }
 
-        .password-toggle i {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            cursor: pointer;
-            color: #666;
+            .login img {
+                width: 100%;
+                height: 200px;
+                border-radius: 12px 12px 0 0;
+            }
+
+            .form-container {
+                width: 100%;
+                padding: 30px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="login-container">
-        <div class="login-header">
-            <h1>Login</h1>
-            <p>Masuk ke akun GoLombok Anda</p>
-        </div>
+    <div class="login">
+        <img src="img/login2.jpeg" alt="Lombok Landscape">
+        
+        <div class="form-container">
+            <form action="" method="POST">
+                <h2>Login</h2>
+                <p>Don't have an account? <a href="register.php">Register</a></p>
 
-        <?php if (!empty($error)): ?>
-            <div class="error-message">
-                <i class="fas fa-exclamation-circle"></i> <?php echo htmlspecialchars($error); ?>
-            </div>
-        <?php endif; ?>
+                <div class="form-group">
+                    <input type="email" id="email" name="email" required placeholder="Email">
+                    <input type="password" id="password" name="password" required placeholder="Password">
+                    <input type="submit" value="Login">
+                </div>
+            </form>
 
-        <form method="POST" action="">
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" placeholder="Masukkan email" required 
-                       value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>">
-            </div>
-
-            <div class="form-group password-toggle">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" placeholder="Masukkan password" required>
-                <i class="fas fa-eye" id="togglePassword"></i>
-            </div>
-
-            <button type="submit" class="login-btn">
-                <i class="fas fa-sign-in-alt"></i> Login
-            </button>
-        </form>
-
-        <div class="register-link">
-            Belum punya akun? <a href="register.php">Daftar di sini</a>
-        </div>
-
-        <div class="back-home">
-            <a href="home.php"><i class="fas fa-arrow-left"></i> Kembali ke Home</a>
         </div>
     </div>
 
     <script>
-        // Toggle password visibility
-        document.getElementById('togglePassword').addEventListener('click', function() {
-            const passwordInput = document.getElementById('password');
-            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-            passwordInput.setAttribute('type', type);
-            this.classList.toggle('fa-eye');
-            this.classList.toggle('fa-eye-slash');
-        });
-
-        // Validasi form client-side
         document.querySelector('form').addEventListener('submit', function(e) {
             const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value.trim();

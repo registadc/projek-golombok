@@ -747,44 +747,49 @@ if (session_status() === PHP_SESSION_NONE) {
   <p>Rasakan cita rasa khas Lombok dan kekayaan budayanya dalam satu perjalanan.</p>
 
   <div class="highlights-grid reveal">
-    <div class="highlights-card">
-      <img src="img/ayam.jpeg" alt="Ayam Taliwang">
-      <div class="text-content">
-        <h3>Ayam Taliwang</h3>
-        <p>Ayam panggang pedas khas Lombok, gurih dan penuh rempah.</p>
-      </div>
-    </div>
-
-    <div class="highlights-card">
-      <img src="img/kangkung.jpeg" alt="Plecing Kangkung">
-      <div class="text-content">
-        <h3>Plecing Kangkung</h3>
-        <p>Kangkung segar dengan sambal pedas tomat, pelengkap sempurna Ayam Taliwang.</p>
-      </div>
-    </div>
-
-    <div class="highlights-card reveal">
-      <img src="img/nyale.jpg" alt="Festival Bau Nyale">
-      <div class="text-content">
-        <h3>Festival Bau Nyale</h3>
-        <p>Tradisi tahunan menangkap cacing laut, terkait legenda Putri Mandalika.</p>
-      </div>
-    </div>
-
-    <div class="highlights-card">
-      <img src="img/budaya.jpg" alt="Tari Peresean">
-      <div class="text-content">
-        <h3>Tari Peresean</h3>
-        <p>Pertunjukan seni bela diri tradisional Sasak menggunakan tongkat rotan.</p>
-      </div>
+  <div class="highlights-card" onclick="openVideo('https://www.youtube.com/watch?v=g_rJkNbxVq8')">
+    <img src="img/ayam.jpeg" alt="Ayam Taliwang">
+    <div class="text-content">
+      <h3>Ayam Taliwang</h3>
+      <p>Ayam panggang pedas khas Lombok, gurih dan penuh rempah.</p>
     </div>
   </div>
+
+  <div class="highlights-card" onclick="openVideo('https://www.youtube.com/watch?v=CvShDN4CdsU')">
+    <img src="img/kangkung.jpeg" alt="Plecing Kangkung">
+    <div class="text-content">
+      <h3>Plecing Kangkung</h3>
+      <p>Kangkung segar dengan sambal pedas tomat, pelengkap sempurna Ayam Taliwang.</p>
+    </div>
+  </div>
+
+  <div class="highlights-card" onclick="openVideo('https://www.youtube.com/watch?v=xjvIlSmVjCg')">
+    <img src="img/nyale.jpg" alt="Festival Bau Nyale">
+    <div class="text-content">
+      <h3>Festival Bau Nyale</h3>
+      <p>Tradisi tahunan menangkap cacing laut, terkait legenda Putri Mandalika.</p>
+    </div>
+  </div>
+
+  <div class="highlights-card" onclick="openVideo('https://www.youtube.com/watch?v=WP-wQAxF5uA')">
+    <img src="img/budaya.jpg" alt="Tari Peresean">
+    <div class="text-content">
+      <h3>Tari Peresean</h3>
+      <p>Pertunjukan seni bela diri tradisional Sasak menggunakan tongkat rotan.</p>
+    </div>
+  </div>
+</div>
+
 </section>
 
 <?php include "footer.php"; ?>
 
   <!----------------SCRIPT EFEK SCROLL------------->
   <script>
+     function openVideo(url) {
+      window.open(url, '_blank'); // buka YouTube di tab baru
+    }
+
   document.addEventListener("DOMContentLoaded", function() {
     const reveals = document.querySelectorAll('.reveal');
 
@@ -807,6 +812,7 @@ if (session_status() === PHP_SESSION_NONE) {
   } else {
     header.classList.remove("scrolled");
   }
+
 });
   </script>
 </body>

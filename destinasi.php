@@ -20,20 +20,17 @@ if (isset($_GET['kategori']) && !empty($_GET['kategori'])) {
 
 $destinasi = $koneksi->query($sql);
 
-// PERBAIKAN: Gunakan session variable yang konsisten
 if (isset($_GET['add_favorite']) && isset($_GET['id_wisata'])) {
     if (isset($_SESSION['user_id'])) {
         $user_id = $_SESSION['user_id'];
         $wisata_id = $_GET['id_wisata'];
         
-        // PERBAIKAN: Perbaiki variabel $id_user menjadi $user_id
         $check = $koneksi->query("SELECT * FROM favorit WHERE id_user = '$user_id' AND id_wisata = '$wisata_id'");
         
         if ($check->num_rows > 0) {
             $koneksi->query("DELETE FROM favorit WHERE id_user = '$user_id' AND id_wisata = '$wisata_id'");
             $favorite_message = "Destinasi dihapus dari favorit";
         } else {
-            // PERBAIKAN: Perbaiki variabel $id_user menjadi $user_id
             $koneksi->query("INSERT INTO favorit (id_user, id_wisata) VALUES ('$user_id', '$wisata_id')");
             $favorite_message = "Destinasi ditambahkan ke favorit";
         }
@@ -47,11 +44,9 @@ if (isset($_GET['add_favorite']) && isset($_GET['id_wisata'])) {
     }
 }
 
-// PERBAIKAN: Query untuk mendapatkan status favorit - HAPUS DUPLIKAT
 $favorites = [];
 if (isset($_SESSION['user_id'])) {
     $user_id = $_SESSION['user_id'];
-    // PERBAIKAN: Perbaiki nama tabel dan kolom
     $favorite_result = $koneksi->query("SELECT id_wisata FROM favorit WHERE id_user = '$user_id'");
     while ($row = $favorite_result->fetch_assoc()) {
         $favorites[] = $row['id_wisata'];
