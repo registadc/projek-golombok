@@ -643,15 +643,17 @@ if (session_status() === PHP_SESSION_NONE) {
 
   <form action="destinasi.php" method="get" class="search-box">
     <div class="categories">
-      <a href="destinasi.php?kategori=Pantai">
-        <i class="fas fa-umbrella-beach"></i> Pantai
-      </a>
-      <a href="destinasi.php?kategori=Alam">
-        <i class="fas fa-mountain"></i> Alam
-      </a>
-      <a href="destinasi.php?kategori=Budaya">
-        <i class="fas fa-landmark"></i> Budaya
-      </a>
+            <a href="destinasi.php?kategori=1">
+   <i class="fas fa-mountain-sun"></i> Alam
+</a>
+<a href="destinasi.php?kategori=2">
+  <i class="fas fa-umbrella-beach"></i> Pantai
+</a>
+<a href="destinasi.php?kategori=3">
+  <i class="fas fa-landmark"></i> Budaya
+</a>
+ 
+
     </div>
 
     <input type="text" name="q" placeholder="Gunung Rinjani...">
