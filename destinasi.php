@@ -308,6 +308,20 @@ if (isset($_SESSION['user_id'])) {
             border-color: #00bfa6;
         }
 
+        /* Awal elemen tersembunyi */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 0.8s ease-out;
+    }
+
+    /* Saat elemen terlihat di layar */
+    .reveal.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+
         /* Style untuk pesan */
         .message {
             padding: 10px 15px;
@@ -351,6 +365,7 @@ if (isset($_SESSION['user_id'])) {
                 justify-content: space-between;
             }
         }
+        
     </style>
 </head>
 <body>
@@ -361,7 +376,7 @@ if (isset($_SESSION['user_id'])) {
         <p>Destinasi wisata di Lombok</p>
     </div>
 
-    <div class="content">
+    <div class="content reveal">
         <div class="destinasi">
             <h2>Destinasi Terbaik di Lombok Menantimu</h2>
             <p>Nikmati serunya petualangan alam, jelajahi pantai eksotis,
@@ -405,7 +420,7 @@ if (isset($_SESSION['user_id'])) {
             
             // PERBAIKAN: Gunkan id_wisata yang benar
             echo "
-            <div class='destinasi-item'>
+            <div class='destinasi-item reveal'>
                 <a href='destinasi.php?add_favorite=1&id_wisata={$row['id_wisata']}&kategori=" . (isset($_GET['kategori']) ? $_GET['kategori'] : '') . "&keyword=" . (isset($_GET['keyword']) ? $_GET['keyword'] : '') . "' class='love-icon " . ($is_favorite ? 'active' : '') . "'>
                     <i class='{$heart_icon} fa-heart'></i>
                 </a>
@@ -448,6 +463,26 @@ if (isset($_SESSION['user_id'])) {
         function clearCategoryFilter() {
             filterByCategory('');
         }
+
+        // Fungsi untuk mendeteksi elemen yang muncul di layar
+function revealOnScroll() {
+  const reveals = document.querySelectorAll('.reveal');
+  for (let i = 0; i < reveals.length; i++) {
+    const windowHeight = window.innerHeight;
+    const revealTop = reveals[i].getBoundingClientRect().top;
+    const revealPoint = 150; // jarak sebelum muncul
+
+    if (revealTop < windowHeight - revealPoint) {
+      reveals[i].classList.add('show');
+    } else {
+      reveals[i].classList.remove('show');
+    }
+  }
+}
+
+// Jalankan saat scroll dan saat pertama kali load
+window.addEventListener('scroll', revealOnScroll);
+window.addEventListener('load', revealOnScroll);
     </script>
 </body>
 </html>

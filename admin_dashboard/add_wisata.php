@@ -184,7 +184,7 @@ $result = $koneksi->query("SELECT * FROM kategori");
     <a href="dashboard.php">Dashboard</a>
     <a href="daftar_wisata.php">Daftar Wisata</a>
     <a href="add_wisata.php">Tambah Wisata</a>
-    <a href="users">Users</a>
+    <a href="users.php">Users</a>
   </div>
 
   <div class="content">

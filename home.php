@@ -1,5 +1,7 @@
 <?php
 
+include "koneksi.php";
+
 // Hanya start session jika belum ada session yang aktif
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
@@ -132,6 +134,26 @@ if (session_status() === PHP_SESSION_NONE) {
       margin-top: 20px;
       font-size: 1.1rem;
       line-height: 1.6;
+    }
+
+    login-btn {
+      background-color: #00C9A7;
+      color: white;
+      padding: 8px 20px;
+      border-radius: 25px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+    }
+    
+    .login-btn:hover {
+      background-color: #00b894;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 201, 167, 0.3);
+      color: white;
     }
 
     /* Search bar absolute di bawah hero */
@@ -622,7 +644,9 @@ if (session_status() === PHP_SESSION_NONE) {
       </a>
     <?php else: ?>
       <!-- Tampilkan tombol login jika belum login -->
-      <a href="login.php" class="login-btn">Login</a>
+       <a href="login.php" class="login-btn">
+            <i class="fas fa-sign-in-alt"></i> Login
+          </a>
     <?php endif; ?>
   </nav>
 </header>
@@ -660,61 +684,57 @@ if (session_status() === PHP_SESSION_NONE) {
     <button type="submit"><i class="fas fa-search"></i></button>
   </form>
 
-<!----------------TOP DESTINASI------------->
+<!-- ========== SEARCH BOX ========== -->
+<form action="home.php" method="get" class="search-box">
+  <div class="categories">
+    <a href="destinasi.php?kategori=1"><i class="fas fa-mountain-sun"></i> Alam</a>
+    <a href="destinasi.php?kategori=2"><i class="fas fa-umbrella-beach"></i> Pantai</a>
+    <a href="destinasi.php?kategori=3"><i class="fas fa-landmark"></i> Budaya</a>
+  </div>
+
+  <input type="text" name="q" placeholder="Cari wisata... (misal: Rinjani)" 
+         value="<?= isset($_GET['q']) ? htmlspecialchars($_GET['q']) : '' ?>">
+  <button type="submit"><i class="fas fa-search"></i></button>
+</form>
+
+<!-- ========== TOP DESTINATIONS ========== -->
 <section class="destinations">
-    <h2>Top Destinations</h2>
-    <p>Destinasi terbaik Lombok untuk liburan tak terlupakan.</p>
+  <h2>Top Destinations</h2>
+  <p>Destinasi terbaik Lombok untuk liburan tak terlupakan.</p>
 
-    <div class="dest-grid">
-        <?php
-        include "koneksi.php";
-        
+  <div class="dest-grid">
+    <?php
+    // 🔎 Jika ada pencarian
+    if (isset($_GET['q']) && !empty(trim($_GET['q']))) {
+        $keyword = mysqli_real_escape_string($koneksi, $_GET['q']);
+        $query = mysqli_query($koneksi, "SELECT * FROM wisata WHERE nama_wisata LIKE '%$keyword%'");
+    } else {
+        // Jika tidak ada pencarian, tampilkan 4 destinasi default
         $query = mysqli_query($koneksi, "SELECT * FROM wisata LIMIT 4");
-        $destinasi = [];
-        while ($row = mysqli_fetch_assoc($query)) {
-            $destinasi[] = $row;
-        }
-        
-        // Jika data dari database tersedia
-        if(count($destinasi) >= 4): 
-            for($i = 0; $i < 4; $i++):
-            $d = $destinasi[$i];
-        ?>
-            <!-- PERBAIKAN: ganti id menjadi id_wisata -->
-            <a href="detail_wisata.php?id_wisata=<?= $d['id_wisata']; ?>" class="dest-card reveal">
-                <img src="<?= !empty($d['gambar_utama']) ? 'admin_dashboard/uploads/'.$d['gambar_utama'] : 'images/default.jpg'; ?>" 
-                    alt="<?= $d['nama_wisata']; ?>"
-                    onerror="this.src='images/default.jpg'">
-                <div class="title"><?= $d['nama_wisata']; ?></div>
-            </a>
-        <?php 
-            endfor; 
-        else: 
-            // Fallback jika data tidak tersedia
-        ?>
-            <a href="#" class="dest-card reveal">
-                <img src="img/rinjani.jpeg" alt="Gunung Rinjani">
-                <div class="title">Gunung Rinjani</div>
-            </a>
-            <a href="#" class="dest-card reveal">
-                <img src="img/pink-beach.jpeg" alt="Pink Beach">
-                <div class="title">Pink Beach</div>
-            </a>
-            <a href="#" class="dest-card reveal">
-                <img src="img/gili-trawangan.jpeg" alt="Gili Trawangan">
-                <div class="title">Gili Trawangan</div>
-            </a>
-            <a href="#" class="dest-card reveal">
-                <img src="img/sendang-gile.jpeg" alt="Air Terjun Sendang Gile">
-                <div class="title">Air Terjun Sendang Gile</div>
-            </a>
-        <?php endif; ?>
-    </div>
+    }
 
-    <div class="explore-btn reveal">
-        <a href="destinasi.php">explore more destinations</a>
-    </div>
+    if (mysqli_num_rows($query) > 0):
+        while ($d = mysqli_fetch_assoc($query)): ?>
+          <a href="detail_wisata.php?id_wisata=<?= $d['id_wisata']; ?>" class="dest-card reveal">
+            <img src="<?= !empty($d['gambar_utama']) ? 'admin_dashboard/uploads/'.$d['gambar_utama'] : 'images/default.jpg'; ?>"
+                 alt="<?= htmlspecialchars($d['nama_wisata']); ?>" 
+                 onerror="this.src='images/default.jpg'">
+            <div class="title"><?= htmlspecialchars($d['nama_wisata']); ?></div>
+          </a>
+    <?php 
+        endwhile;
+    else: ?>
+        <p>Tidak ditemukan destinasi dengan nama "<strong><?= htmlspecialchars($_GET['q'] ?? '') ?></strong>".</p>
+    <?php endif; ?>
+  </div>
+
+  <?php if (!isset($_GET['q']) || $_GET['q'] == ''): ?>
+  <div class="explore-btn reveal">
+    <a href="destinasi.php">explore more destinations</a>
+  </div>
+  <?php endif; ?>
 </section>
+
 
   <!----------------TRAVEL SMART------------->
   <div class="travel reveal">
